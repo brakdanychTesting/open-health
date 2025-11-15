@@ -157,6 +157,23 @@ graph LR
 
 </details>
 
+## ⚙️ How to Test OpenHealth
+
+<details open>
+<summary><b>Testing Instructions</b></summary>
+
+1. **Build the app:**
+  ```bash
+  docker compose -f docker-compose.test.yaml build
+  ```
+
+2. **Run tests:**
+  ```bash
+  docker compose -f docker-compose.test.yaml run --rm tests
+  ```
+
+</details>
+
 ---
 
 ## Star History
