@@ -1,0 +1,26 @@
+services:
+  database:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-testpass}
+      POSTGRES_USER: ${POSTGRES_USER:-testuser}
+      POSTGRES_DB: ${POSTGRES_DB:-testdb}
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ${POSTGRES_USER:-testuser}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  tests:
+    build:
+      context: .
+      dockerfile: Containerfile
+      target: test
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-testuser}:${POSTGRES_PASSWORD:-testpass}@database:5432/${POSTGRES_DB:-testdb}
+      CURRENT_DEPLOYMENT_ENV: local
+      ENCRYPTION_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABc= # example 32-byte base64
+    depends_on:
+      database:
+        condition: service_healthy
+    tty: true
